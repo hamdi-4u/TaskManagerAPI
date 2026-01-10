@@ -34,7 +34,7 @@ namespace TaskManagerAPI.Repositories
       
         /// Retrieves a specific user by their ID, including their assigned tasks
        
-        /// <param name="id">The user ID to retrieve</param>
+      
         /// returns The user with their tasks if found, null otherwise
         public async Task<User?> GetByIdAsync(int id)
         {

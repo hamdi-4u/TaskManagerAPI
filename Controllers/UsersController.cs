@@ -8,7 +8,7 @@ namespace TaskManagerAPI.Controllers
 {
    
     /// Manages user operations including creation, retrieval, updates, and deletion.
-    /// Implements role-based access control for admins and regular users.
+    /// Implements role based access control for admins and regular users.
    
     [ApiController]
     [Route("api/[controller]")]
@@ -18,7 +18,7 @@ namespace TaskManagerAPI.Controllers
         private readonly IUserService _userService;
 
    
-        /// Initializes the users controller with user service dependency
+        ////// Initializes the users controller with user service dependency
        
         public UsersController(IUserService userService)
         {
@@ -45,7 +45,7 @@ namespace TaskManagerAPI.Controllers
             }
             catch (Exception ex)
             {
-                // Handle duplicate username/email conflicts
+                 // Handle duplicate username/email conflicts
                 if (ex.Message.Contains("already exists") || ex.Message.Contains("duplicate"))
                 {
                     return Conflict(new { message = ex.Message });
@@ -56,9 +56,9 @@ namespace TaskManagerAPI.Controllers
         }
 
        
-        /// Retrieves a list of all users in the system (Admin only)
+        /// Retrieves a list of all users in the system Admin only
    
-        /// <returns>Complete list of all registered users
+        /// returns complete list of all registered users.
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
@@ -69,11 +69,8 @@ namespace TaskManagerAPI.Controllers
 
         
         /// Retrieves a specific user by their ID.
-        /// Admins can view any user, regular users can only view their own profile.
-        
-
-        /// The user ID to retrieve
-        /// User details if found and user has permission
+        //// Admins can view any user, regular users can only view their own profile.
+        ///// User details if found and user has permission
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
@@ -117,7 +114,7 @@ namespace TaskManagerAPI.Controllers
             }
             catch (Exception ex)
             {
-                // Handle duplicate username/email conflicts during update
+                //// Handle duplicate username/email conflicts during update
                 if (ex.Message.Contains("already exists") || ex.Message.Contains("duplicate"))
                 {
                     return Conflict(new { message = ex.Message });
@@ -128,9 +125,9 @@ namespace TaskManagerAPI.Controllers
         }
 
       
-        ///// Deletes a user from the system (Admin only)
+        ///// Deletes a user from the system Admin only
         
-        //// No content if successful, not found if user doesn't exist
+        ////// No content if successful, not found if user doesn't exist
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteUser(int id)

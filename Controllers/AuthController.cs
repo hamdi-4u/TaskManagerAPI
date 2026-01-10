@@ -46,7 +46,7 @@ namespace TaskManagerAPI.Controllers
                 return Unauthorized(new { message = "Invalid username or password" });
             }
 
-            // Verify the password (assuming this happens in the service layer)
+          
             // If password verification fails, return unauthorized
 
             // Create user claims for the authentication cookie
@@ -73,7 +73,7 @@ namespace TaskManagerAPI.Controllers
         #region Private Helper Methods
 
       
-        /// Creates a list of claims based on user information
+        ////// Creates a list of claims based on user information
       
         /// The authenticated user DTO
         /// List of claims containing user identity and role information
@@ -102,9 +102,7 @@ namespace TaskManagerAPI.Controllers
             };
 
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                principal,
-                authenticationProperties
+                CookieAuthenticationDefaults.AuthenticationScheme, principal,authenticationProperties
             );
         }
 

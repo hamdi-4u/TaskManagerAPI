@@ -63,7 +63,7 @@ namespace TaskManagerAPI.Services
 
         /// Creates a new task in the system
 
-        /// param Task creation data
+        
         /// returns The created task as a DTO
         /// exception ArgumentException Thrown when validation fails
         public async Task<TaskDto> CreateTaskAsync(CreateTaskDto dto)
@@ -95,8 +95,8 @@ namespace TaskManagerAPI.Services
         }
 
   
-        /// Updates an existing task with role-based authorization.
-        /// Admins can update all fields, regular users can only update status of their own tasks.
+        /// Updates an existing task with role based authorization.
+        /// Admins can update all fields,regular users can only update status of their own tasks.
       
         public async Task<TaskDto?> UpdateTaskAsync(int id, CreateTaskDto dto, int currentUserId, string currentUserRole)
         {
@@ -107,7 +107,7 @@ namespace TaskManagerAPI.Services
                 return null;
             }
 
-            //// Apply updates based on user role
+            ////// Apply updates based on user role
             if (currentUserRole == "Admin")
             {
                 await ApplyAdminUpdates(task, dto);
@@ -120,7 +120,7 @@ namespace TaskManagerAPI.Services
             //// Save changes to database
             await _taskRepository.UpdateAsync(task);
 
-            //// Reload task with user information
+            ////// Reload task with user information
             var taskWithUser = await _taskRepository.GetByIdAsync(id);
 
             return MapToDto(taskWithUser!);

@@ -26,7 +26,7 @@ namespace TaskManagerAPI.Models
         public string? Description { get; set; }
 
  
-        ///// Current status of the task (e.g., Pending, InProgress, Completed)
+        ///// Current status of the task (Pending, InProgress, Completed)
    
         public Entities.TaskStatus? Status { get; set; }
 

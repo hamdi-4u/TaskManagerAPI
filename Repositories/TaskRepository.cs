@@ -7,14 +7,14 @@ namespace TaskManagerAPI.Repositories
 {
     
     /// Repository for managing task data access operations.
-    /// Handles CRUD operations and queries for tasks in the database.
+    ////// Handles CRUD operations and queries for tasks in the database.
    
     public class TaskRepository : ITaskRepository
     {
         private readonly AppDbContext _context;
 
       
-        /// Initializes the task repository with database context
+        ////// Initializes the task repository with database context
       
         public TaskRepository(AppDbContext context)
         {
@@ -22,25 +22,23 @@ namespace TaskManagerAPI.Repositories
         }
 
        
-        /// Retrieves all tasks from the database, including assigned user information
+        //// Retrieves all tasks from the database,including assigned user information
        
-        /// Complete list of all tasks with their assigned users
+        ////// Complete list of all tasks with their assigned users
         public async Task<IEnumerable<TaskItem>> GetAllAsync()
         {
             return await _context.Tasks
-                .Include(task => task.AssignedUser)
-                .ToListAsync();
+                .Include(task => task.AssignedUser).ToListAsync();
         }
 
         
-        /// Retrieves a specific task by its ID, including assigned user information
+        /// Retrieves a specific task by its ID,including assigned user information
        
-        /// The task if found, null otherwise
+        ///// The task if found, null otherwise
         public async Task<TaskItem?> GetByIdAsync(int id)
         {
             return await _context.Tasks
-                .Include(task => task.AssignedUser)
-                .FirstOrDefaultAsync(task => task.Id == id);
+                .Include(task => task.AssignedUser).FirstOrDefaultAsync(task => task.Id == id);
         }
 
         /// Adds a new task to the database
@@ -54,7 +52,7 @@ namespace TaskManagerAPI.Repositories
 
             // Reload the task with related data
             await _context.Entry(task)
-                .Reference(t => t.AssignedUser)
+                .Reference(task => task.AssignedUser)
                 .LoadAsync();
 
             return task;
@@ -79,8 +77,7 @@ namespace TaskManagerAPI.Repositories
             await _context.SaveChangesAsync();
 
             // Reload related data
-            await _context.Entry(existingTask)
-                .Reference(t => t.AssignedUser)
+            await _context.Entry(existingTask).Reference(task => task.AssignedUser)
                 .LoadAsync();
 
             return existingTask;

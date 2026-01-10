@@ -8,7 +8,7 @@ namespace TaskManagerAPI.Controllers
 {
     
     /// Manages task operations including creation, retrieval, updates, and deletion.
-    /// Implements role-based access control for admins and regular users.
+    ///// Implements role based access control for admins and regular users.
    
     [ApiController]
     [Route("api/[controller]")]
@@ -26,10 +26,10 @@ namespace TaskManagerAPI.Controllers
         }
 
 
-        /// Creates a new task in the system (Admin only)
+        /// Creates a new task in the system Admin only
        
         /// Task details including title, description, and assignment
-        /// The created task with generated ID
+        ////// The created task with generated ID
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<TaskDto>> CreateTask([FromBody] CreateTaskDto dto)
@@ -52,8 +52,8 @@ namespace TaskManagerAPI.Controllers
       
         /// Retrieves tasks based on user role.
         /// Admins see all tasks, regular users see only their assigned tasks.
-        /// 
-        /// List of tasks filtered by user permissions
+      
+        ///// List of tasks filtered by user permissions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskDto>>> GetTasks()
         {
@@ -64,22 +64,21 @@ namespace TaskManagerAPI.Controllers
 
             if (isAdmin)
             {
-                // Admins can view all tasks in the system
+                //// Admins can view all tasks in the system
                 tasks = await _taskService.GetAllTasksAsync();
             }
             else
             {
-                // Regular users only see tasks assigned to them
+                /// Regular users only see tasks assigned to them
                 tasks = await _taskService.GetTasksByUserIdAsync(currentUserId);
             }
 
             return Ok(tasks);
         }
 
-        /// Retrieves a specific task by its ID.
         /// Users can only view tasks assigned to them, admins can view any task.
-        ///
-        /// The task ID to retrieve
+  
+        
         /// Task details if found and user has permission
         [HttpGet("{id}")]
         public async Task<ActionResult<TaskDto>> GetTaskById(int id)
@@ -108,10 +107,8 @@ namespace TaskManagerAPI.Controllers
         /// Updates an existing task.
         /// Admins can update all fields of any task.
         /// Regular users can only update the status of tasks assigned to them.
-        ///
-        /// The task ID to update
         /// Updated task information
-        /// The updated task details
+        
         [HttpPut("{id}")]
         public async Task<ActionResult<TaskDto>> UpdateTask(int id, [FromBody] CreateTaskDto dto)
         {
@@ -145,7 +142,7 @@ namespace TaskManagerAPI.Controllers
         }
 
 
-        /// Deletes a task from the system (Admin only)
+        ///// Deletes a task from the system (Admin only)
   
 
         /// No content if successful, not found if task doesn't exist
@@ -167,7 +164,6 @@ namespace TaskManagerAPI.Controllers
 
         /// Extracts the current user's ID from the authentication claims
        
-
         /// The authenticated user's ID
         private int GetCurrentUserId()
         {

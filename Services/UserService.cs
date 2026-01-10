@@ -69,7 +69,7 @@ namespace TaskManagerAPI.Services
 
         ////// returns the created user as a DTO
         ////// exception ArgumentException Thrown when validation fails
-        /// exception InvalidOperationException">Thrown when username already exists
+        /// exception InvalidOperationException Thrown when username already exists
         public async Task<UserDto> CreateUserAsync(CreateUserDto dto)
         {
             // Validate required fields

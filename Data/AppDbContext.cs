@@ -36,13 +36,13 @@ namespace TaskManagerAPI.Data
             // Configure relationships
             ConfigureRelationships(modelBuilder);
 
-            // Seed initial data
+            //// Seed initial data
             SeedUsers(modelBuilder);
             SeedTasks(modelBuilder);
         }
 
        
-        /// Configures the relationship between Users and Tasks
+        ///// Configures the relationship between Users and Tasks
        
         private void ConfigureRelationships(ModelBuilder modelBuilder)
         {
@@ -53,7 +53,7 @@ namespace TaskManagerAPI.Data
         }
 
        
-        /// Seeds initial users for development and testing
+        ////// Seeds initial users for development and testing
        
         private void SeedUsers(ModelBuilder modelBuilder)
         {
@@ -80,7 +80,7 @@ namespace TaskManagerAPI.Data
         }
 
        
-        /// Seeds initial tasks for development and testing
+        ///// Seeds initial tasks for development and testing
        
         private void SeedTasks(ModelBuilder modelBuilder)
         {
