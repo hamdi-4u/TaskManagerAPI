@@ -19,7 +19,7 @@ Test Retrieve:
 2. Cookie is automatically sent
 3. Check response (200 OK if task belongs to user, 403 if not)
 Testing in Swagger Login Cookie Authentication
-1. Navigate to https://localhost:5001/swagger
+1. Navigate to https://localhost:7198/swagger/index.html
 2. Find POST /api/auth/login
 3. Click "Try it out"
 4. Enter:
