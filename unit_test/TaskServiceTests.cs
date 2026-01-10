@@ -7,12 +7,19 @@ using Xunit;
 
 namespace TaskManagerAPI.Tests
 {
+   
+    /// Unit tests for the TaskService.
+    /// Tests task creation, validation, and business logic.
+   
     public class TaskServiceTests
     {
+       
+        /// Verifies that a task is created successfully with valid data
+       
         [Fact]
         public async Task CreateTaskAsync_WithValidData_ReturnsTaskDto()
         {
-            
+            //// Arrange - Set up test data and dependencies
             var mockTaskRepository = new Mock<ITaskRepository>();
             var mockUserRepository = new Mock<IUserRepository>();
             var taskService = new TaskService(mockTaskRepository.Object, mockUserRepository.Object);
@@ -30,7 +37,7 @@ namespace TaskManagerAPI.Tests
             {
                 Id = 2,
                 Username = "testuser",
-                Email = "test@live.com",
+                Email = "test@gmail.com",
                 PasswordHash = "hashedpassword",
                 Role = Role.User,
                 CreatedAt = DateTime.UtcNow
@@ -48,24 +55,19 @@ namespace TaskManagerAPI.Tests
                 CreatedAt = DateTime.UtcNow
             };
 
-            //// Mock User exists
-            mockUserRepository
-                .Setup(repo => repo.GetByIdAsync(2))
-                .ReturnsAsync(assignedUser);
+            // Configure mock: User exists
+            mockUserRepository.Setup(repo => repo.GetByIdAsync(2)).ReturnsAsync(assignedUser);
 
-            mockTaskRepository
-                .Setup(repo => repo.AddAsync(It.IsAny<TaskItem>()))
-                .ReturnsAsync(createdTask);
+            // Configure mock: Task is added successfully
+            mockTaskRepository.Setup(repo => repo.AddAsync(It.IsAny<TaskItem>())).ReturnsAsync(createdTask);
 
-            // GetByIdAsync returns task with user
-            mockTaskRepository
-                .Setup(repo => repo.GetByIdAsync(1))
-                .ReturnsAsync(createdTask);
+            // Configure mock: GetByIdAsync returns task with user
+            mockTaskRepository.Setup(repo => repo.GetByIdAsync(1)).ReturnsAsync(createdTask);
 
-            ////Act
+            // Act - Execute the method being tested
             var result = await taskService.CreateTaskAsync(createTaskDto);
 
-            //////// Assert
+            // Assert - Verify the results
             Assert.NotNull(result);
             Assert.Equal(1, result.Id);
             Assert.Equal("Test Task", result.Title);
@@ -73,24 +75,21 @@ namespace TaskManagerAPI.Tests
             Assert.Equal(Entities.TaskStatus.Pending, result.TaskStatus);
             Assert.Equal(2, result.AssignedUserId);
             Assert.Equal("testuser", result.AssignedUserName);
-            Assert.Equal("test@gmail.com", result.AssignedUserEmail);
+            Assert.Equal("test@example.com", result.AssignedUserEmail);
 
-            //// validate repository methods were called
-            mockUserRepository.Verify(
-                repo => repo.GetByIdAsync(2),
-                Times.Once
-            );
+            // Verify repository methods were called correctly
+            mockUserRepository.Verify(repo => repo.GetByIdAsync(2),Times.Once);
 
-            mockTaskRepository.Verify(
-                repo => repo.AddAsync(It.IsAny<TaskItem>()),
-                Times.Once
-            );
+            mockTaskRepository.Verify(repo => repo.AddAsync(It.IsAny<TaskItem>()),Times.Once);
         }
 
+       
+        /// Verifies that an exception is thrown when trying to assign a task to a non-existent user
+       
         [Fact]
         public async Task CreateTaskAsync_WithNonExistentUser_ThrowsException()
         {
-            // Arrange
+            // Arrange - Set up test data and dependencies
             var mockTaskRepository = new Mock<ITaskRepository>();
             var mockUserRepository = new Mock<IUserRepository>();
             var taskService = new TaskService(mockTaskRepository.Object, mockUserRepository.Object);
@@ -99,26 +98,23 @@ namespace TaskManagerAPI.Tests
             {
                 Title = "Test Task",
                 Description = "Test Description",
-                AssignedUserId = 999 
+                AssignedUserId = 999 // Non-existent user ID
             };
 
-            // Mock- User does not exist
+            // Configure mock: User does not exist
             mockUserRepository
                 .Setup(repo => repo.GetByIdAsync(999))
                 .ReturnsAsync((User?)null);
 
-            //Act &Assert
+            // Act & Assert - Verify exception is thrown
             var exception = await Assert.ThrowsAsync<ArgumentException>(
                 () => taskService.CreateTaskAsync(createTaskDto)
             );
 
-            Assert.Equal("assigned user does not exist", exception.Message);
+            Assert.Equal("Assigned user does not exist", exception.Message);
 
-            ///// detect AddAsync was never called
-            mockTaskRepository.Verify(
-                repo => repo.AddAsync(It.IsAny<TaskItem>()),
-                Times.Never
-            );
+            // Verify AddAsync was never called since validation failed
+            mockTaskRepository.Verify(repo => repo.AddAsync(It.IsAny<TaskItem>()),Times.Never);
         }
     }
 }

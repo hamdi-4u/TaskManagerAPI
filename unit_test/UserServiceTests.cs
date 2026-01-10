@@ -7,14 +7,21 @@ using Xunit;
 
 namespace TaskManagerAPI.Tests
 {
+    /// <summary>
+    /// Unit tests for the UserService.
+    /// Tests user creation, validation, and business logic.
+    /// </summary>
     public class UserServiceTests
     {
+      
+        /// Verifies that a user is created successfully with valid data
+     
         [Fact]
         public async Task CreateUserAsync_WithValidData_ReturnsUserDto()
         {
-            ///// Arrange
-            var mockRepository = new Mock<IUserRepository>();
-            var userService = new UserService(mockRepository.Object);
+            ///// Arrange - Set up test data and dependencies
+            var mockUserRepository = new Mock<IUserRepository>();
+            var userService = new UserService(mockUserRepository.Object);
 
             var createUserDto = new CreateUserDto
             {
@@ -24,31 +31,29 @@ namespace TaskManagerAPI.Tests
                 Role = "User"
             };
 
-            ///// Mock--- username doesn't exist
-            mockRepository
+            //////// Configure mock: Username doesn't exist (available)
+            mockUserRepository
                 .Setup(repo => repo.GetByUsernameAsync(It.IsAny<string>()))
                 .ReturnsAsync((User?)null);
 
-            ///// Mock--- AddAsync - use Callback to set ID
-            mockRepository
+            //// Configure mock: AddAsync  use Callback to simulate ID generation
+            mockUserRepository
                 .Setup(repo => repo.AddAsync(It.IsAny<User>()))
                 .Callback<User>(user => user.Id = 1)
                 .Returns(Task.CompletedTask);
 
-            ///// Act
+            //// Act  Execute the method being tested
             var result = await userService.CreateUserAsync(createUserDto);
 
-            ///////Assert
+            //// Assert - Verify the results
             Assert.NotNull(result);
             Assert.Equal(1, result.Id);
             Assert.Equal("testuser", result.Username);
-            Assert.Equal("test@gmail.com", result.Email);
+            Assert.Equal("test@yahoo.com", result.Email);
             Assert.Equal("User", result.Role);
 
-            /////verify repository was called
-            mockRepository.Verify(
-                repo => repo.AddAsync(It.IsAny<User>()),
-                Times.Once
+            // Verify repository was called once
+            mockUserRepository.Verify(repo => repo.AddAsync(It.IsAny<User>()),Times.Once
             );
         }
     }
